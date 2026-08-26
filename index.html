@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>人对文档负责，AI 对代码负责</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root{
+    --ground:#14110b;
+    --surface:#1e1a12;
+    --surface2:#262117;
+    --line:#3a3325;
+    --ink:#ece2cf;
+    --ink-dim:#9c9078;
+    --ink-faint:#6b6250;
+    --amber:#e8a33d;
+    --amber-soft:#c78f3d;
+    --red:#e05c5c;
+    --green:#79b877;
+    --serif:"Noto Serif SC",serif;
+    --sans:"Noto Sans SC",-apple-system,sans-serif;
+    --mono:"JetBrains Mono","SF Mono",ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    background:var(--ground);color:var(--ink);
+    font-family:var(--sans);font-size:16px;line-height:1.6;
+    overflow:hidden;
+  }
+  /* ---------- deck chrome ---------- */
+  #progress{position:fixed;top:0;left:0;height:2px;background:var(--amber);width:0;transition:width .3s ease;z-index:10}
+  #counter{position:fixed;bottom:20px;right:28px;font-family:var(--mono);font-size:12px;color:var(--ink-faint);z-index:10;font-variant-numeric:tabular-nums}
+  #eyebrow{position:fixed;bottom:20px;left:28px;font-family:var(--mono);font-size:12px;color:var(--ink-faint);letter-spacing:.08em;z-index:10}
+  #hint{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:11px;color:var(--ink-faint);z-index:10;opacity:.8;transition:opacity .5s}
+  #hint.gone{opacity:0}
+  /* ---------- slides ---------- */
+  .slide{
+    position:absolute;inset:0;display:none;
+    padding:64px 72px 72px;
+    flex-direction:column;justify-content:center;
+  }
+  .slide.active{display:flex}
+  .slide{align-items:center}
+  .wrap{width:min(1160px,94vw);margin:0 auto}
+  @media (prefers-reduced-motion:no-preference){
+    .slide.active{animation:fadein .35s ease}
+    @keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  }
+  .kicker{font-family:var(--mono);font-size:13px;color:var(--amber);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px}
+  h1{font-family:var(--serif);font-weight:900;font-size:clamp(34px,5.6vw,72px);line-height:1.28;text-wrap:balance}
+  h2{font-family:var(--serif);font-weight:900;font-size:clamp(30px,4vw,54px);line-height:1.3;margin-bottom:28px;text-wrap:balance}
+  .accent{color:var(--amber)}
+  .sub{color:var(--ink-dim);font-size:clamp(16px,1.6vw,22px);max-width:36em}
+  .footnote{font-family:var(--mono);font-size:12px;color:var(--ink-faint);margin-top:28px}
+  /* code panes */
+  .pane{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+  .pane-bar{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--ink-dim)}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
+  .pane pre{padding:18px 20px;font-family:var(--mono);font-size:14px;line-height:1.7;color:var(--ink-dim);overflow-x:auto}
+  .pane pre .hl{color:var(--ink)}
+  .pane pre .am{color:var(--amber)}
+  .pane pre .gr{color:var(--green)}
+  .pane pre .rd{color:var(--red)}
+  .pane pre .cm{color:var(--ink-faint)}
+  .scenes .pane{border-radius:16px}
+  .scenes .pane-body{padding:18px 22px;font-size:clamp(14px,1.4vw,17px);line-height:1.8;color:var(--ink-dim)}
+  .scenes .pane-body b{color:var(--ink);font-weight:500;display:block;margin-bottom:6px}
+  /* generic two-col */
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+  /* step build */
+  .step{opacity:.22;transition:opacity .3s ease}
+  .step.on{opacity:1}
+  @media (prefers-reduced-motion:reduce){.step{transition:none}}
+  /* slide 2: five layers */
+  .chain{display:flex;flex-direction:column;gap:0;max-width:1050px}
+  .layer{display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:center;padding:14px 0}
+  .layer + .layer{border-top:1px dashed var(--line)}
+  .layer .name{font-family:var(--mono);font-size:clamp(16px,1.8vw,22px);font-weight:600;color:var(--amber)}
+  .layer .name small{display:block;font-size:12px;color:var(--ink-faint);font-weight:400;margin-top:2px}
+  .layer .role{color:var(--ink-dim);font-size:clamp(14px,1.3vw,17px)}
+  .layer .role b{color:var(--ink);font-weight:500}
+  /* slide 4: numbers */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:12px}
+  .stat{border-top:2px solid var(--amber);padding-top:16px}
+  .stat .n{font-family:var(--mono);font-size:clamp(44px,6vw,84px);font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+  .stat .l{font-family:var(--mono);font-size:13px;color:var(--ink-dim);margin-top:10px}
+  .stat .d{font-size:13px;color:var(--ink-faint);margin-top:6px}
+  /* slide 5: pipeline */
+  .pipe{display:flex;flex-direction:column;gap:0;max-width:1120px}
+  .pipe .st{display:grid;grid-template-columns:26px 240px 1fr;gap:16px;padding:10px 0;align-items:baseline}
+  .pipe .st + .st{border-top:1px dashed var(--line)}
+  .pipe .st .ar{color:var(--ink-faint);font-family:var(--mono)}
+  .pipe .st .t{font-size:clamp(13px,1.3vw,16px);font-family:var(--mono)}
+  .pipe .st .t small{display:block;color:var(--ink-faint);font-size:11px;font-family:var(--sans);margin-top:2px}
+  .pipe .st .ex{font-size:clamp(14px,1.4vw,17px);color:var(--ink-dim)}
+  .pipe .st .ex b{color:var(--ink);font-weight:500}
+  .pipe .st.key .t{color:var(--amber);font-weight:600}
+  .gatebox{margin-top:26px;border:1px solid var(--amber);border-radius:6px;padding:18px 22px;max-width:1000px;display:flex;gap:14px;align-items:baseline}
+  .gatebox .k{font-family:var(--mono);color:var(--amber);font-weight:600;white-space:nowrap}
+  .gatebox .v{color:var(--ink-dim);font-size:15px}
+  /* slide 6: taste card */
+  .taste{border:1px solid var(--line);border-left:3px solid var(--amber);background:var(--surface);border-radius:6px;padding:28px 34px;max-width:1000px}
+  .taste .rule{font-family:var(--mono);font-size:14px;color:var(--amber);margin-bottom:14px}
+  .taste .rule .sev{color:var(--red);margin-left:10px}
+  .taste blockquote{font-family:var(--serif);font-weight:600;font-size:clamp(22px,2.6vw,32px);line-height:1.6;color:var(--ink)}
+  .taste .prov{font-family:var(--mono);font-size:12px;color:var(--ink-faint);margin-top:16px}
+  /* slide 7: compare table */
+  table{border-collapse:collapse;width:100%;max-width:1080px;font-size:clamp(14px,1.4vw,18px)}
+  th,td{text-align:left;padding:13px 18px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--mono);font-size:13px;color:var(--amber);font-weight:600;letter-spacing:.05em}
+  td:first-child,th:first-child{color:var(--ink-faint);font-family:var(--mono);font-size:13px;width:120px;padding-left:0}
+  td{color:var(--ink-dim)}
+  td b{color:var(--ink);font-weight:500}
+  /* slide 8: dual loop */
+  .loopwrap{display:flex;justify-content:center;margin:8px 0 4px}
+  .loopwrap svg{max-width:1020px;width:100%;height:auto}
+  .verdict{display:inline-flex;gap:10px;align-items:center;font-family:var(--mono);font-size:14px;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:10px 16px;margin-top:22px}
+  .verdict .rc{color:var(--red);font-weight:600}
+  /* slide 9: cost */
+  .costwrap svg{max-width:760px;width:100%;height:auto}
+  /* slide 10: drift flow */
+  .drift{display:flex;flex-direction:column;gap:0;max-width:1000px}
+  .drift .row{display:grid;grid-template-columns:34px 1fr;gap:18px;padding:12px 0;align-items:baseline}
+  .drift .row + .row{border-top:1px dashed var(--line)}
+  .drift .no{font-family:var(--mono);color:var(--ink-faint);font-size:13px}
+  .drift .tx{font-size:clamp(16px,1.7vw,21px);color:var(--ink-dim)}
+  .drift .tx b{color:var(--ink);font-weight:500}
+  .drift .row.bad .tx b{color:var(--red)}
+  /* slide 11: overdesign */
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:940px}
+  .vs .pane pre{font-size:13px}
+  /* slide 12: 80% */
+  .big{font-family:var(--mono);font-weight:600;font-size:clamp(120px,22vw,300px);line-height:.95;color:var(--amber);letter-spacing:-.02em}
+  /* end slides */
+  .thesis{font-family:var(--serif);font-weight:900;font-size:clamp(30px,4.6vw,58px);line-height:1.5;max-width:20em;text-wrap:balance}
+  @media (max-width:820px){
+    .slide{padding:44px 26px 64px}
+    .cols,.vs{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr 1fr;gap:20px}
+    .layer{grid-template-columns:1fr;gap:4px}
+  }
+</style>
+
+<div id="progress"></div>
+<div id="eyebrow"></div>
+<div id="counter"></div>
+<div id="hint">← → 或 空格 翻页</div>
+
+<!-- 1 · cover -->
+<section class="slide" data-eyebrow="Soloco as an AI Company">
+  <p class="kicker">Soloco as an AI Company</p>
+  <h1>AI Native 实践</h1>
+</section>
+
+<!-- A · 破题 -->
+<section class="slide" data-eyebrow="开题">
+  <p class="thesis">Agent 已经能写文档、写代码了——<br><span class="accent">但它还没走进组织。</span></p>
+  <p class="sub" style="margin-top:30px">我们已经形成了<b style="color:var(--ink);font-weight:500">个人的生产力</b>，但还没形成<b style="color:var(--ink);font-weight:500">组织级别的生产力</b>。<br>这场分享回答一个问题：<b style="color:var(--ink);font-weight:500">Agent 怎么走进组织？</b>——SoloCo 在 AI Native 方面的实践。</p>
+</section>
+
+<!-- B · 选题 -->
+<section class="slide" data-eyebrow="选题">
+  <div class="drift" style="max-width:900px">
+    <div class="row"><span class="no">01</span><span class="tx" style="font-size:clamp(20px,2.4vw,30px)"><b>当下最重要的技术。</b></span></div>
+    <div class="row"><span class="no">02</span><span class="tx" style="font-size:clamp(20px,2.4vw,30px)">什么最重要？看梁文锋押什么——<b style="color:var(--amber)">AGI</b>。</span></div>
+    <div class="row"><span class="no">03</span><span class="tx" style="font-size:clamp(20px,2.4vw,30px)">他打算怎么做 AGI？——<b style="color:var(--amber)">看 DSH。</b></span></div>
+  </div>
+</section>
+
+<!-- V1 · 梁文锋引语 -->
+<section class="slide" data-eyebrow="第一幕 · DSH 技术分享">
+  <p class="kicker">为什么做这件事</p>
+  <p class="thesis">「现在通往 AGI 最大的障碍，<br>是 AI 的<span class="accent">自主学习能力</span>。」</p>
+  <p class="sub" style="margin-top:28px">—— 梁文锋。我的理解：自主学习不只是学，还包含<b style="color:var(--ink);font-weight:500">把学到的能力积累下来</b>。DeepSeek harness 给出了现阶段的答案：万物皆为插件——agent 发现能力空白，就给自己写插件 + 版本迭代，直到达到目的。</p>
+</section>
+
+<!-- V2 · token 推演 -->
+<section class="slide" data-eyebrow="第一幕 · DSH 技术分享">
+  <h2>自进化长什么样：一次真实的推演</h2>
+  <p class="sub" style="margin-bottom:20px">用户：「帮我看看这个会话里 LLM 的 token 消耗，我感觉最近特别费。」</p>
+  <div class="cols" style="grid-template-columns:3fr 2fr;align-items:center">
+    <div class="drift">
+      <div class="row"><span class="no">01</span><span class="tx">查现有工具面——<b>没有现成的 token 统计视图</b></span></div>
+      <div class="row"><span class="no">02</span><span class="tx">查进程里有什么——发现有个服务<b>每次 LLM 请求都广播一条用量事件</b>，带 token 数</span></div>
+      <div class="row"><span class="no">03</span><span class="tx">查清字段（时间戳 / 请求 id / token 数）→ <b>写插件 v1</b>：订阅事件、收集、按时间轴画成面板</span></div>
+      <div class="row bad"><span class="no">04</span><span class="tx">跑起来——<b>字段猜错，面板显示 NaN</b></span></div>
+      <div class="row"><span class="no">05</span><span class="tx">读报错 → <b style="color:var(--green)">追加 v2 修正 → 再跑，实时面板亮起</b></span></div>
+    </div>
+    <div class="pane">
+      <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>token-usage-panel · v2</div>
+      <pre><span class="cm">req-a41f</span>  ████████░░  <span class="am">1,842</span>
+<span class="cm">req-a420</span>  ████░░░░░░    <span class="am">903</span>
+<span class="cm">req-a421</span>  ██████████  <span class="rd">2,377</span>
+<span class="cm">req-a422</span>  ██░░░░░░░░    <span class="am">411</span>
+<span class="cm">─────────────────────────</span>
+<span class="hl">total</span>              <span class="gr">5,533</span></pre>
+    </div>
+  </div>
+  <p class="footnote">自进化的证据不是「它会写插件」，是 04 → 05 那个拐弯：它会根据报错给自己发新版本</p>
+</section>
+
+<!-- V2b · effect/disposer -->
+<section class="slide" data-eyebrow="第一幕 · DSH 技术分享">
+  <h2>动态的装卸机制：每个动作都带撤回</h2>
+  <p class="sub" style="margin-bottom:22px">进程内每个动作都实现一对 <b style="color:var(--ink);font-weight:500">effect（做）+ disposer（撤回）</b>。规矩只有一条：<b style="color:var(--ink);font-weight:500">每实现一个动作，必须同时写它的撤回动作。</b></p>
+  <div class="cols" style="grid-template-columns:1fr 1fr;max-width:1050px">
+    <div class="pane">
+      <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>effect · 装载时执行</div>
+      <pre><span class="gr">① 创建文件，写入内容</span>
+<span class="gr">② 订阅用量事件</span>
+<span class="gr">③ 启动 token 面板服务</span></pre>
+    </div>
+    <div class="pane">
+      <div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>disposer · 卸载时逆序执行</div>
+      <pre><span class="rd">③ 停掉面板服务</span>
+<span class="rd">② 取消订阅</span>
+<span class="rd">① 删掉这个文件</span></pre>
+    </div>
+  </div>
+  <div class="loopwrap" style="margin-top:20px">
+    <svg viewBox="0 0 900 90" role="img" aria-label="装载依次执行 effect，卸载逆序执行 disposer">
+      <defs><marker id="ahd" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#6b6250"/></marker></defs>
+      <rect x="20" y="24" width="200" height="40" rx="6" fill="#1e1a12" stroke="#79b877"/>
+      <text x="120" y="49" text-anchor="middle" fill="#79b877" font-family="JetBrains Mono,monospace" font-size="14">装载 e1→e2→e3</text>
+      <line x1="228" y1="44" x2="330" y2="44" stroke="#6b6250" stroke-width="1.4" marker-end="url(#ahd)"/>
+      <rect x="338" y="24" width="150" height="40" rx="6" fill="#1e1a12" stroke="#3a3325"/>
+      <text x="413" y="49" text-anchor="middle" fill="#ece2cf" font-family="Noto Sans SC,sans-serif" font-size="14">运行</text>
+      <line x1="496" y1="44" x2="598" y2="44" stroke="#6b6250" stroke-width="1.4" marker-end="url(#ahd)"/>
+      <rect x="606" y="24" width="270" height="40" rx="6" fill="#1e1a12" stroke="#e05c5c"/>
+      <text x="741" y="49" text-anchor="middle" fill="#e05c5c" font-family="JetBrains Mono,monospace" font-size="14">卸载 d3→d2→d1（逆序）</text>
+    </svg>
+  </div>
+  <p class="footnote">卸载完，进程回到干净状态——这是「万物皆插件」能装能卸的前提，也是原子化操作可组装的前提</p>
+</section>
+
+<!-- V3 · DSH 没做的事（钩子） -->
+<section class="slide" data-eyebrow="第一幕 · DSH 技术分享">
+  <h2>但有件事 DSH 没做：插件跟着进程一起死</h2>
+  <div class="loopwrap">
+    <svg viewBox="0 0 780 130" role="img" aria-label="DSH 插件随进程消失">
+      <text x="10" y="46" fill="#9c9078" font-family="JetBrains Mono,monospace" font-size="13" font-weight="600">DSH</text>
+      <line x1="70" y1="70" x2="430" y2="70" stroke="#6b6250" stroke-width="2"/>
+      <line x1="430" y1="70" x2="560" y2="70" stroke="#6b6250" stroke-width="1.4" stroke-dasharray="3 5" opacity=".45"/>
+      <circle cx="120" cy="70" r="4" fill="#e8a33d"/>
+      <text x="120" y="52" text-anchor="middle" fill="#9c9078" font-family="Noto Sans SC,sans-serif" font-size="12">进程启动</text>
+      <circle cx="240" cy="70" r="4" fill="#e8a33d"/>
+      <text x="240" y="52" text-anchor="middle" fill="#9c9078" font-family="Noto Sans SC,sans-serif" font-size="12">插件诞生·工作</text>
+      <text x="430" y="52" text-anchor="middle" fill="#e05c5c" font-family="Noto Sans SC,sans-serif" font-size="12">进程结束</text>
+      <text x="428" y="80" fill="#e05c5c" font-family="JetBrains Mono,monospace" font-size="15">✕</text>
+      <text x="500" y="94" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">插件消失，下次从零再来</text>
+    </svg>
+  </div>
+  <p class="sub">这不是缺陷——DSH 是 <b style="color:var(--ink);font-weight:500">runtime 级别</b>的框架，插件天然是<b style="color:var(--ink);font-weight:500">进程形态的生命周期</b>：进程结束，插件消失，<b style="color:var(--ink);font-weight:500">无法形成共有记忆</b>。持久化不归 runtime 管。这件事，谁来做？</p>
+</section>
+
+<!-- ANS · 我们的答案 -->
+<section class="slide" data-eyebrow="第二幕 · Soloco 组织落地">
+  <h2>Soloco 几个月前就意识到——<span class="accent">并且已经开始做了</span></h2>
+  <div class="loopwrap">
+    <svg viewBox="0 0 780 130" role="img" aria-label="我们的能力沉淀后可被复用">
+      <defs><marker id="ahw" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#79b877"/></marker></defs>
+      <text x="10" y="46" fill="#e8a33d" font-family="JetBrains Mono,monospace" font-size="13" font-weight="600">我们</text>
+      <line x1="70" y1="70" x2="440" y2="70" stroke="#e8a33d" stroke-width="2"/>
+      <path d="M 440 70 C 520 70, 560 70, 620 70" fill="none" stroke="#79b877" stroke-width="2" marker-end="url(#ahw)"/>
+      <circle cx="120" cy="70" r="4" fill="#e8a33d"/>
+      <text x="120" y="52" text-anchor="middle" fill="#9c9078" font-family="Noto Sans SC,sans-serif" font-size="12">任务开始</text>
+      <circle cx="250" cy="70" r="4" fill="#e8a33d"/>
+      <text x="250" y="52" text-anchor="middle" fill="#9c9078" font-family="Noto Sans SC,sans-serif" font-size="12">能力诞生（固定格式）</text>
+      <circle cx="440" cy="70" r="5" fill="#79b877"/>
+      <text x="440" y="52" text-anchor="middle" fill="#79b877" font-family="Noto Sans SC,sans-serif" font-size="12">沉淀到本地</text>
+      <text x="545" y="94" text-anchor="middle" fill="#79b877" font-family="Noto Sans SC,sans-serif" font-size="12">下次任务直接检索复用</text>
+    </svg>
+  </div>
+  <p class="sub">我们的答案：不止<b style="color:var(--ink);font-weight:500">动作的持久化</b>，还有<b style="color:var(--ink);font-weight:500">动作组合的持久化</b>，以及组成的 <b style="color:var(--ink);font-weight:500">worker 和部门的持久化</b>。</p>
+</section>
+
+<!-- V4 · 共享智力 -->
+<section class="slide" data-eyebrow="第二幕 · Soloco 组织落地">
+  <h2>沉淀之后：共享智力</h2>
+  <div class="loopwrap">
+    <svg viewBox="0 0 780 240" role="img" aria-label="用户 A 沉淀的能力经 server 推荐被用户 B 复用">
+      <defs>
+        <marker id="ah3" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0 L8 4 L0 8 z" fill="#e8a33d"/>
+        </marker>
+      </defs>
+      <!-- user A -->
+      <circle cx="110" cy="120" r="44" fill="none" stroke="#3a3325" stroke-width="1.4"/>
+      <text x="110" y="116" text-anchor="middle" fill="#ece2cf" font-family="Noto Sans SC,sans-serif" font-size="13">用户 A</text>
+      <text x="110" y="134" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">写了读 LLM 用量的能力</text>
+      <!-- server -->
+      <rect x="310" y="82" width="160" height="76" rx="6" fill="#1e1a12" stroke="#e8a33d"/>
+      <text x="390" y="112" text-anchor="middle" fill="#e8a33d" font-family="JetBrains Mono,monospace" font-size="13" font-weight="600">server</text>
+      <text x="390" y="134" text-anchor="middle" fill="#9c9078" font-family="Noto Sans SC,sans-serif" font-size="11">推荐算法</text>
+      <!-- user B -->
+      <circle cx="670" cy="120" r="44" fill="none" stroke="#3a3325" stroke-width="1.4"/>
+      <text x="670" y="116" text-anchor="middle" fill="#ece2cf" font-family="Noto Sans SC,sans-serif" font-size="13">用户 B</text>
+      <text x="670" y="134" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">同样的需求</text>
+      <!-- arrows -->
+      <path d="M 158 106 C 220 92, 250 92, 305 100" fill="none" stroke="#e8a33d" stroke-width="1.6" marker-end="url(#ah3)"/>
+      <text x="232" y="82" text-anchor="middle" fill="#9c9078" font-family="Noto Sans SC,sans-serif" font-size="12">沉淀 · 分享</text>
+      <path d="M 475 100 C 540 92, 570 92, 622 106" fill="none" stroke="#79b877" stroke-width="1.6" marker-end="url(#ah3)"/>
+      <text x="548" y="82" text-anchor="middle" fill="#79b877" font-family="Noto Sans SC,sans-serif" font-size="12">推荐 · 安装</text>
+      <path d="M 655 168 C 640 196, 620 204, 596 206" fill="none" stroke="#6b6250" stroke-width="1.3" stroke-dasharray="4 4"/>
+      <text x="530" y="222" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">先检索自己本地 → miss → 命中共享库</text>
+    </svg>
+  </div>
+  <div style="display:flex;gap:14px;margin-top:10px">
+    <span style="font-family:var(--mono);font-size:13px;border:1px solid var(--line);border-radius:4px;padding:6px 14px;color:var(--amber)">原子化操作</span>
+    <span style="font-family:var(--mono);font-size:13px;border:1px solid var(--line);border-radius:4px;padding:6px 14px;color:var(--amber)">固定格式</span>
+    <span style="font-family:var(--mono);font-size:13px;border:1px solid var(--line);border-radius:4px;padding:6px 14px;color:var(--amber)">可组织拼接分享</span>
+  </div>
+  <p class="footnote">这就是我们和 DSH 不一样的地方——共享智力，在 toB 场景有非常大的作用</p>
+</section>
+
+<!-- V5 · graph engineering + 组织沉淀 -->
+<section class="slide" data-eyebrow="第二幕 · Soloco 组织落地">
+  <h2>graph engineering：同一张图长上去</h2>
+  <div class="loopwrap">
+    <svg viewBox="0 0 780 260" role="img" aria-label="原子能力逐级组成 skill、worker、部门、组织">
+      <defs>
+        <marker id="ah4" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0 L8 4 L0 8 z" fill="#6b6250"/>
+        </marker>
+      </defs>
+      <!-- level rows, bottom-up -->
+      <text x="14" y="238" fill="#6b6250" font-family="JetBrains Mono,monospace" font-size="11">L1</text>
+      <g font-family="JetBrains Mono,monospace" font-size="11" fill="#9c9078">
+        <rect x="60" y="220" width="88" height="26" rx="4" fill="#1e1a12" stroke="#3a3325"/><text x="104" y="237" text-anchor="middle">读用量事件</text>
+        <rect x="158" y="220" width="88" height="26" rx="4" fill="#1e1a12" stroke="#3a3325"/><text x="202" y="237" text-anchor="middle">画面板</text>
+        <rect x="256" y="220" width="88" height="26" rx="4" fill="#1e1a12" stroke="#3a3325"/><text x="300" y="237" text-anchor="middle">发飞书通知</text>
+        <rect x="354" y="220" width="88" height="26" rx="4" fill="#1e1a12" stroke="#3a3325"/><text x="398" y="237" text-anchor="middle">查数据库</text>
+        <rect x="452" y="220" width="88" height="26" rx="4" fill="#1e1a12" stroke="#3a3325"/><text x="496" y="237" text-anchor="middle">…</text>
+      </g>
+      <text x="600" y="238" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="12">原子动作（沉淀物）</text>
+      <text x="14" y="178" fill="#6b6250" font-family="JetBrains Mono,monospace" font-size="11">L2</text>
+      <g font-family="JetBrains Mono,monospace" font-size="11" fill="#c78f3d">
+        <rect x="110" y="160" width="150" height="28" rx="4" fill="#1e1a12" stroke="#3a3325"/><text x="185" y="178" text-anchor="middle">成本监控能力</text>
+        <rect x="280" y="160" width="150" height="28" rx="4" fill="#1e1a12" stroke="#3a3325"/><text x="355" y="178" text-anchor="middle">数据报表能力</text>
+      </g>
+      <text x="600" y="178" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="12">动作组装成能力</text>
+      <text x="14" y="118" fill="#6b6250" font-family="JetBrains Mono,monospace" font-size="11">L3</text>
+      <g font-family="Noto Sans SC,sans-serif" font-size="12" fill="#ece2cf">
+        <rect x="140" y="100" width="120" height="28" rx="14" fill="#262117" stroke="#3a3325"/><text x="200" y="118" text-anchor="middle">财务 worker</text>
+        <rect x="280" y="100" width="120" height="28" rx="14" fill="#262117" stroke="#3a3325"/><text x="340" y="118" text-anchor="middle">运营 worker</text>
+      </g>
+      <text x="600" y="118" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="12">能力装备成 worker</text>
+      <text x="14" y="58" fill="#6b6250" font-family="JetBrains Mono,monospace" font-size="11">L4</text>
+      <rect x="180" y="38" width="240" height="30" rx="6" fill="#1e1a12" stroke="#e8a33d"/>
+      <text x="300" y="58" text-anchor="middle" fill="#e8a33d" font-family="Noto Sans SC,sans-serif" font-size="13" font-weight="500">部门 → 组织（树状编排）</text>
+      <text x="600" y="58" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="12">worker 组成部门与组织</text>
+    
+      <g stroke="#6b6250" stroke-width="1.2" fill="none">
+        <path d="M 104 218 C 110 206, 150 196, 176 190" marker-end="url(#ah4)"/>
+        <path d="M 202 218 C 200 210, 194 200, 189 192" marker-end="url(#ah4)"/>
+        <path d="M 300 218 C 280 208, 240 198, 205 192" marker-end="url(#ah4)"/>
+        <path d="M 300 218 C 316 208, 336 200, 348 192" marker-end="url(#ah4)"/>
+        <path d="M 398 218 C 390 210, 374 200, 363 192" marker-end="url(#ah4)"/>
+        <path d="M 496 218 C 470 206, 410 196, 372 190" marker-end="url(#ah4)"/>
+        <path d="M 185 158 C 188 148, 194 140, 198 132" marker-end="url(#ah4)"/>
+        <path d="M 355 158 C 350 148, 345 140, 342 132" marker-end="url(#ah4)"/>
+        <path d="M 355 158 C 320 148, 250 140, 216 133" marker-end="url(#ah4)"/>
+        <path d="M 200 98 C 220 88, 250 78, 272 71" marker-end="url(#ah4)"/>
+        <path d="M 340 98 C 336 90, 330 80, 325 71" marker-end="url(#ah4)"/>
+      </g>
+    </svg>
+  </div>
+  <p class="sub">同一个组装动作逐层复利：<b style="color:var(--ink);font-weight:500">动作组装成能力，能力构成员工，员工组成部门，部门结合成组织</b>——每一层都可沉淀，沉淀了就能分享、能进化。这就是从个人能力到组织的 graph engineering。</p>
+  <p class="footnote">动作是节点，组装是边——loop engineering 管一个循环怎么转，graph engineering 管能力怎么长成组织，这是硅谷当下在争的下一层抽象</p>
+</section>
+
+<!-- V6 · 组织资产三级跳 -->
+<section class="slide" data-eyebrow="第二幕 · Soloco 组织落地">
+  <h2>组织资产的三级跳：生成 → 沉淀 → 进化 → 分享</h2>
+  <div class="pipe" style="max-width:1120px">
+    <div class="st"><span class="ar">①</span><span class="t">生成 → 沉淀<small>怎么让产出留下来</small></span><span class="ex"><b>固定格式 + 完整生命周期</b>——插件按统一格式落盘，effect / disposer 把它的装载、运行、卸载完整记录下来；进程死了，能力还在</span></div>
+    <div class="st"><span class="ar">②</span><span class="t">沉淀 → 进化<small>怎么让留下来的变强</small></span><span class="ex"><b>版本迭代 + 组装升级</b>——沉淀物带版本（v1 报 NaN → v2 修正），原子动作还能组装成能力、worker、部门，每一层都在原有资产上长</span></div>
+    <div class="st key"><span class="ar">③</span><span class="t">进化 → 分享<small>怎么让一个人的变成所有人的</small></span><span class="ex"><b>发布到 server + 推荐检索</b>——沉淀的能力发布上 server；用户 B 有同样需求时先检索本地，miss 了由推荐算法从共享库命中，直接装上用</span></div>
+  </div>
+  <p class="sub" style="margin-top:26px;max-width:44em">AI Native 组织把一次次对话中的判断与能力，沉淀为<b style="color:var(--ink);font-weight:500">可复用、可组合、可共享的资产</b>，形成组织级的「判断力」与「行动力」——<b style="color:var(--amber);font-weight:500">人沉淀判断力，AI 沉淀行动力。</b>组织能力第一次可以版本管理。</p>
+</section>
+
+<!-- R1 · 战略资源成果 -->
+<section class="slide scenes" data-eyebrow="第二幕 · 落地成果">
+  <h2>落地成果：战略资源发现</h2>
+  <p class="sub" style="margin-bottom:22px">持续通过 AI native 组织找寻资源——Soloco 负责发现、触达、发邮件：</p>
+  <div class="drift" style="max-width:960px">
+    <div class="row"><span class="no">→</span><span class="tx"><b>NVIDIA Inception Program</b>——Soloco 发现并帮我们申请通过</span></div>
+    <div class="row"><span class="no">→</span><span class="tx"><b>胡润 AI 先锋（第一届）</b>——零成本入选</span></div>
+    <div class="row"><span class="no">→</span><span class="tx"><b>多个免费 PR 机会</b>——持续抓取、邮件触达</span></div>
+  </div>
+  <div style="margin-top:26px;border:1px dashed var(--line);border-radius:12px;padding:22px;max-width:960px;text-align:center;color:var(--ink-faint);font-family:var(--mono);font-size:13px">［ 图位：申请通过邮件 / 入选页面截图 ］</div>
+</section>
+
+<!-- R2 · 数据底座与零信任 -->
+<section class="slide scenes" data-eyebrow="第二幕 · 落地成果">
+  <h2>落地成果：数据底座与零信任</h2>
+  <div class="cols" style="grid-template-columns:1fr 1fr;gap:20px;max-width:1100px">
+    <div class="pane"><div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>持续构建公司数据底座</div>
+      <div class="pane-body"><b>所有数据持续汇入、持续喂给组织建设。</b>录音沉淀的文本、飞书文档、日历、task list、GitHub 代码库——公司发生过的一切，都是底座的一部分。</div></div>
+    <div class="pane"><div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>零信任权限体系</div>
+      <div class="pane-body"><b>底座之上，谁能看什么由身份决定。</b>每个身份只开它需要的数据权限；新员工入职自动配置飞书、runtime 第一时间拿到公司上下文；runtime 替 leader 做推测型任务分发。</div></div>
+  </div>
+  <p class="footnote">一个实习生进来，权限自动开到刚好够用——数据底座是共享的，访问是零信任的</p>
+</section>
+
+<!-- R3 · 主动式智能收尾 -->
+<section class="slide scenes" data-eyebrow="第二幕 · 落地成果">
+  <h2>Soloco 是<span class="accent">主动发现、主动式智能</span>的产品</h2>
+  <p class="sub" style="margin-bottom:22px">不是你问它才答——它一直在看、一直在沉淀、主动把该做的事推到你面前：</p>
+  <div class="cols" style="grid-template-columns:1fr 1fr;gap:20px;max-width:1100px">
+    <div class="pane"><div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>会议与背调接管</div>
+      <div class="pane-body"><b>每次会议 / 面试都留底稿。</b>公司内部一直开着录音，持续录音转文字；纪要喂给 Soloco，做人物背调、机构背调、会后推进研究——持续接管，而不是开完就散。</div></div>
+    <div class="pane"><div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>执行端打通</div>
+      <div class="pane-body"><b>筛简历、LinkedIn 触达，走 MCP 落到执行端。</b>未来把 SaaS 转成可执行 CLI，执行边界随之打开。</div></div>
+  </div>
+</section>
+
+<!-- IND · 业界现状锚点 -->
+<section class="slide" data-eyebrow="第三幕 · AI 工作流">
+  <h2>业界的 AI 工作流，<span class="accent">人还是瓶颈</span></h2>
+  <div class="drift" style="max-width:940px">
+    <div class="row"><span class="no">01</span><span class="tx"><b>人肉 review</b>——每个 PR 排队等人看</span></div>
+    <div class="row"><span class="no">02</span><span class="tx"><b>逐 session 交代上下文</b>——每开一个会话，从头讲一遍背景</span></div>
+    <div class="row"><span class="no">03</span><span class="tx"><b>chat 式一问一答</b>——人不在，一切停</span></div>
+  </div>
+  <p class="sub" style="margin-top:26px">这三个瓶颈，我们全部<b style="color:var(--ink);font-weight:500">结构化</b>掉了——接下来是我们的三件套。</p>
+</section>
+
+<!-- pivot · thesis -->
+<section class="slide" data-eyebrow="第三幕 · AI 工作流">
+  <p class="kicker">这套愿景怎么落地？我们公司的答案</p>
+  <h1>人对<span class="accent">文档</span>负责，<br>AI 对<span class="accent">代码</span>负责。</h1>
+  <p class="sub" style="margin-top:28px">文档是人和 agent 沟通的桥梁——人的判断沉淀成文档，AI 的执行落成代码。接下来讲怎么做：文档分层、taste 蒸馏、带宽与认知投降。</p>
+</section>
+
+<!-- 2 · five layers (stepped) -->
+<section class="slide" data-eyebrow="第三幕 · AI 工作流" data-steps="5">
+  <h2>五层文档结构，逐层往下压</h2>
+  <div class="chain">
+    <div class="layer step" data-step="1">
+      <div class="name">AGENTS.md<small>宪法</small></div>
+      <div class="role">只聊基本思想。<b>第一句讲产品是什么、理念、愿景</b>，然后列出下两层的 path。细节写进宪法，宪法就没人读了。</div>
+    </div>
+    <div class="layer step" data-step="2">
+      <div class="name">architecture<small>技术架构</small></div>
+      <div class="role">代码 high level 架构：<b>agent 分几个角色、每个角色的作用</b>；模块怎么划、职责边界在哪。跨功能的稳定契约。</div>
+    </div>
+    <div class="layer step" data-step="3">
+      <div class="name">prd<small>产品设计</small></div>
+      <div class="role">一个功能一个 prd，<b>一个 prd 包含多个 design</b>。付费模块是 prd：几种收费模式、什么情况触发。管边界，不管实现。</div>
+    </div>
+    <div class="layer step" data-step="4">
+      <div class="name">design<small>实现方案</small></div>
+      <div class="role">agent 实现代码的<b>最小维度文档</b>。写详细的 how，但不写代码细节——字段名 / CLI / schema 归代码。</div>
+    </div>
+    <div class="layer step" data-step="5">
+      <div class="name">coding<small>唯一真相</small></div>
+      <div class="role">design 的直接下游。<b>代码细节由程序员和持有 design 的 agent 沟通决定。</b>文档和代码打架，信代码。</div>
+    </div>
+  </div>
+  <p class="footnote">prd + design 由产品经理角色书写，工程团队实现 · 冲突时按层级压：宪法 &gt; architecture &gt; prd &gt; design</p>
+</section>
+
+<!-- 3 · real repo -->
+<section class="slide" data-eyebrow="第三幕 · AI 工作流">
+  <div class="taste" style="max-width:980px">
+    <div class="rule">五层契约</div>
+    <blockquote>渐进式披露，就是给 AI 组织设计的注意力经济——<br>为组织内工作的 Agent 优化注意力结构。</blockquote>
+  </div>
+</section>
+
+<!-- 5 · distill pipeline -->
+<section class="slide" data-eyebrow="第三幕 · AI 工作流">
+  <h2>把我的 review taste 蒸馏出来</h2>
+  <p class="sub" style="margin-bottom:22px">前提：你得先跟 agent 聊够多——每次纠正、否方案、拍决定都留在记录里，这就是语料。</p>
+  <div class="pipe">
+    <div class="st"><span class="ar">┌</span><span class="t">本地 transcript<small>~/.claude/projects + ~/.codex/sessions</small></span><span class="ex">我和 AI 的<b>全部聊天记录原文</b>，本来就存在我电脑上，没有任何加工</span></div>
+    <div class="st"><span class="ar">│</span><span class="t">extract + rank<small>五类信号关键词打分排序</small></span><span class="ex">捞出<b>我下判断的时刻</b>：纠正(3)·概念(3)·引用(2)·拍板(2)·指令(1)——「帮我改个 typo」0 分，「不应该建抽象，职责归 daemon，就这么定」8 分</span></div>
+    <div class="st"><span class="ar">│</span><span class="t">distill<small>agent 提名，我逐条拍板</small></span><span class="ex">它问「你是否有条原则：写新代码前先找现有实现？例证是你这句原话」，我 <b>accept / edit / reject</b>——它只能提名，收不收永远是我拍板</span></div>
+    <div class="st key"><span class="ar">│</span><span class="t">OWNER-TASTE.md<small>交付物，进 git 仓库</small></span><span class="ex">每条原则必须挂<b>我的原话 + 出处</b>（哪个会话、哪天）——语料里没有的不许编</span></div>
+    <div class="st"><span class="ar">└</span><span class="t">validate<small>拿历史决策当考卷</small></span><span class="ex">让它只看 TASTE 文件<b>重判我过去真实处理过的 PR</b>，和我当年的决定对答案——<b>0 误报我才签字</b>，没签字的版本不许拿去 review 任何人</span></div>
+  </div>
+</section>
+
+<!-- 6 · taste verbatim -->
+<section class="slide" data-eyebrow="第三幕 · AI 工作流">
+  <h2>机器意见的背后，挂着人的原话</h2>
+  <div class="taste" style="max-width:1000px">
+    <div class="rule">root-cause-over-symptom<span class="sev">[hard · must-fix]</span><span style="color:var(--ink-faint);margin-left:10px">总纲：fix PR 第一问，治标还是治本</span></div>
+    <blockquote>「治标不可耻，把治标伪装成治本才拦截。」</blockquote>
+    <div class="prov">我的原话 · provenance: (claude-code, session, 2026-07-03) · owner-endorsed</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1000px;margin-top:16px" class="taste-subs">
+    <div style="border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:16px 18px">
+      <div style="font-family:var(--mono);font-size:13px;color:var(--amber-soft);margin-bottom:8px">no-silent-fallback</div>
+      <div style="font-size:14px;color:var(--ink-dim)">别加 fallback 掩盖——先问该不该兜底、有没有更干净的根治法</div>
+    </div>
+    <div style="border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:16px 18px">
+      <div style="font-family:var(--mono);font-size:13px;color:var(--amber-soft);margin-bottom:8px">general-invariant-<br>over-special-case</div>
+      <div style="font-size:14px;color:var(--ink-dim)">别逐个 case 打地鼠——「永远修不完」，退一步找根因</div>
+    </div>
+    <div style="border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:16px 18px">
+      <div style="font-family:var(--mono);font-size:13px;color:var(--amber-soft);margin-bottom:8px">challenge-stated-intent</div>
+      <div style="font-size:14px;color:var(--ink-dim)">评审重构追问真实意图是否达成——别被表面解耦骗了</div>
+    </div>
+  </div>
+  <p class="footnote">评审 fix 先过总纲这一关，再落到具体那条 · 三条实例先存在，2026-07-03 收敛成一条总纲——taste 也要重构，重复就收敛<br>语料里没有的不许编——不设这条防线，蒸出来的是模型对「资深工程师」的刻板印象，不是你</p>
+</section>
+
+<!-- 8 · dual loop -->
+<section class="slide" data-eyebrow="第三幕 · AI 工作流">
+  <h2>双 loop 闭环：机器提意见，机器修</h2>
+  <div class="loopwrap">
+    <svg viewBox="0 0 760 240" role="img" aria-label="taste loop 与 pr loop 围绕 GitHub PR 咬合">
+      <defs>
+        <marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0 L8 4 L0 8 z" fill="#e8a33d"/>
+        </marker>
+      </defs>
+      <!-- center PR box -->
+      <rect x="305" y="88" width="150" height="64" rx="6" fill="#1e1a12" stroke="#3a3325"/>
+      <text x="380" y="115" text-anchor="middle" fill="#ece2cf" font-family="JetBrains Mono,monospace" font-size="15" font-weight="600">GitHub PR</text>
+      <text x="380" y="137" text-anchor="middle" fill="#6b6250" font-family="JetBrains Mono,monospace" font-size="11">唯一汇合点</text>
+      <!-- left loop -->
+      <text x="120" y="38" text-anchor="middle" fill="#e8a33d" font-family="JetBrains Mono,monospace" font-size="14" font-weight="600">taste loop</text>
+      <text x="120" y="58" text-anchor="middle" fill="#9c9078" font-family="Noto Sans SC,sans-serif" font-size="12">持续评审 loop</text>
+      <path d="M 165 95 C 220 80, 260 85, 300 100" fill="none" stroke="#e8a33d" stroke-width="1.6" marker-end="url(#ah)"/>
+      <text x="228" y="76" text-anchor="middle" fill="#9c9078" font-family="Noto Sans SC,sans-serif" font-size="12">提意见 · REQUEST_CHANGES</text>
+      <path d="M 300 145 C 260 160, 220 162, 168 148" fill="none" stroke="#6b6250" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#ah)"/>
+      <text x="232" y="182" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="12">5 分钟后复查同一 head</text>
+      <circle cx="120" cy="120" r="52" fill="none" stroke="#3a3325" stroke-width="1.4"/>
+      <text x="120" y="112" text-anchor="middle" fill="#ece2cf" font-family="Noto Sans SC,sans-serif" font-size="13" font-weight="500">评审者身份</text>
+      <text x="120" y="130" text-anchor="middle" fill="#e8a33d" font-family="JetBrains Mono,monospace" font-size="11">OWNER-TASTE</text>
+      <text x="120" y="146" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="10">绑定我的 GitHub 账号</text>
+      <!-- right loop -->
+      <text x="640" y="38" text-anchor="middle" fill="#e8a33d" font-family="JetBrains Mono,monospace" font-size="14" font-weight="600">pr loop</text>
+      <text x="640" y="58" text-anchor="middle" fill="#9c9078" font-family="Noto Sans SC,sans-serif" font-size="12">持续交付 loop</text>
+      <path d="M 595 148 C 540 162, 500 158, 460 143" fill="none" stroke="#e8a33d" stroke-width="1.6" marker-end="url(#ah)"/>
+      <text x="530" y="182" text-anchor="middle" fill="#9c9078" font-family="Noto Sans SC,sans-serif" font-size="12">修评论 · 修 CI · push</text>
+      <path d="M 460 98 C 500 84, 540 82, 592 94" fill="none" stroke="#6b6250" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#ah)"/>
+      <text x="528" y="72" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="12">新事件推醒会话</text>
+      <circle cx="640" cy="120" r="52" fill="none" stroke="#3a3325" stroke-width="1.4"/>
+      <text x="640" y="112" text-anchor="middle" fill="#ece2cf" font-family="Noto Sans SC,sans-serif" font-size="13" font-weight="500">作者身份</text>
+      <text x="640" y="130" text-anchor="middle" fill="#e8a33d" font-family="JetBrains Mono,monospace" font-size="11">员工 / agent 会话</text>
+      <text x="640" y="146" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="10">绑定作者的 GitHub 账号</text>
+      <!-- bottom -->
+      <text x="380" y="226" text-anchor="middle" fill="#79b877" font-family="Noto Sans SC,sans-serif" font-size="13">收敛 → APPROVE → 合入</text>
+    </svg>
+  </div>
+  <p class="sub">taste 持续提意见，pr loop 持续修复，两边都是机器在转。<b style="color:var(--ink);font-weight:500">人只做一件事：处理机器吵不出结果的分歧。</b></p>
+</section>
+
+<!-- 12 · bandwidth -->
+<section class="slide" data-eyebrow="第三幕 · AI 工作流">
+  <h2>设计一旦完成，<br>一个人可以同时开 <span class="accent">10 个 session</span></h2>
+  <p class="sub" style="margin-bottom:26px">这是前面所有结构化投入的兑现时刻——人处理事情的带宽被极大拓展：</p>
+  <div class="drift" style="max-width:1000px">
+    <div class="row"><span class="no">→</span><span class="tx"><b>文档分层</b>让每个 session 自带完整上下文——不需要我逐个交代背景</span></div>
+    <div class="row"><span class="no">→</span><span class="tx"><b>taste loop</b> 替我盯每个 session 产出的质量——不需要我逐个 review</span></div>
+    <div class="row"><span class="no">→</span><span class="tx"><b>pr loop</b> 替我把每个 PR 驱动到收敛——不需要我逐个跟进</span></div>
+    <div class="row"><span class="no">→</span><span class="tx">几个在实现、几个在 review、一个盯 PR、一个跑隔夜 goal——<b>人从写代码的变成调度的</b></span></div>
+  </div>
+</section>
+
+<!-- 13 · 80% -->
+<section class="slide" data-eyebrow="第三幕 · AI 工作流">
+  <div class="big">80%</div>
+  <p class="sub" style="font-size:clamp(18px,2.2vw,26px);color:var(--ink);margin-top:24px;max-width:26em">但带宽拉满有代价——AI 答错的时候，仍有 80% 的人照单全收。</p>
+  <p class="footnote">认知投降 cognitive surrender · Shaw &amp; Nave（宾大沃顿）《Thinking—Fast, Slow, and Artificial》2026.1 · n=1372<br>它不是认知卸载——卸载时控制权还在你手里，投降是连验证都放弃了</p>
+</section>
+
+<!-- 14 · answer -->
+<section class="slide" data-eyebrow="第三幕 · AI 工作流">
+  <h2>带宽是赚到的，<br>判断不能一起交出去</h2>
+  <p class="sub" style="margin-bottom:26px">10 个 session 都在产出看起来很专业的结论，核对带宽早就不够，最省力的动作就是全点「同意」。而且自进化让 AI 的能力越滚越大，人的判断力守门就越重要。我们的答法：<b style="color:var(--ink);font-weight:500">该投降的地方彻底投降，不该投降的地方结构性地防止投降。</b></p>
+  <div class="drift" style="max-width:1000px">
+    <div class="row"><span class="no">→</span><span class="tx"><b>taste 回放 0 误报才签字</b>——签字这个动作本身就是拒绝投降，它逼我真的去核对</span></div>
+    <div class="row"><span class="no">→</span><span class="tx"><b>REQUEST_CHANGES 挡合并</b>——机器结论要生效必须过正式 review，不是随手点赞</span></div>
+    <div class="row"><span class="no">→</span><span class="tx"><b>无人值守长跑用 digest 冻结授权范围</b>——agent 半夜写的任何文本都不构成授权</span></div>
+    <div class="row"><span class="no">→</span><span class="tx"><b>遇到歧义 fail closed</b>——宪法第一条，把「问人」变成默认动作而不是例外</span></div>
+  </div>
+</section>
+
+<!-- hiring · 展望：新组织形态 -->
+<section class="slide" data-eyebrow="第三幕 · 展望：新组织形态">
+  <p class="kicker">我们讲了 AI 的组织扩张——真实世界的公司组织该怎么扩张？</p>
+  <p class="thesis" style="font-size:clamp(26px,3.8vw,48px)">「AI Native 时代，招人只看两样：<br><span class="accent">判断力能不能被蒸馏</span>，<br><span class="accent">意图能不能写成契约</span>。」</p>
+  <div class="taste" style="margin-top:36px;max-width:920px">
+    <div class="rule">面试题</div>
+    <blockquote style="font-size:clamp(17px,1.9vw,24px)">把你在上一份工作里最重要的一次判断，<br>写成一条 agent 能执行的规则。</blockquote>
+    <p style="color:var(--ink-dim);font-size:15px;margin-top:14px">写得出来的人，才是 AI Native 组织要的人。</p>
+  </div>
+</section>
+
+<!-- 14 · close -->
+<section class="slide" data-eyebrow="谢谢">
+  <p class="thesis">执行可以全交出去。<br>判断交出去的那天，<br>你就不是在用 AI，<br><span class="accent">是被 AI 用了。</span></p>
+  <p class="footnote" style="margin-top:48px">人对文档负责，AI 对代码负责 · 谢谢</p>
+</section>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  slides.forEach(function(s){
+    var w=document.createElement('div');w.className='wrap';
+    while(s.firstChild)w.appendChild(s.firstChild);
+    s.appendChild(w);
+  });
+  var progress=document.getElementById('progress');
+  var counter=document.getElementById('counter');
+  var eyebrow=document.getElementById('eyebrow');
+  var hint=document.getElementById('hint');
+  var i=0,interacted=false;
+  function pad(n){return String(n).padStart(2,'0')}
+  function stepsOf(s){return parseInt(s.dataset.steps||'0',10)}
+  function shownSteps(s){return s.querySelectorAll('.step.on').length}
+  function setSteps(s,n){
+    [].slice.call(s.querySelectorAll('.step')).forEach(function(el,idx){
+      el.classList.toggle('on',idx<n);
+    });
+  }
+  function show(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,idx){s.classList.toggle('active',idx===i)});
+    var s=slides[i];
+    if(stepsOf(s)&&shownSteps(s)===0)setSteps(s,1);
+    progress.style.width=((i+1)/slides.length*100)+'%';
+    counter.textContent=pad(i+1)+' / '+pad(slides.length);
+    eyebrow.textContent=s.dataset.eyebrow||'';
+    try{localStorage.setItem('deck-slide',String(i))}catch(e){}
+  }
+  function next(){
+    var s=slides[i],total=stepsOf(s);
+    if(total&&shownSteps(s)<total){setSteps(s,shownSteps(s)+1);return}
+    show(i+1);
+  }
+  function prev(){
+    var s=slides[i],total=stepsOf(s);
+    if(total&&shownSteps(s)>1){setSteps(s,shownSteps(s)-1);return}
+    show(i-1);
+  }
+  function touch(){if(!interacted){interacted=true;hint.classList.add('gone')}}
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'||e.key==='Enter'){e.preventDefault();touch();next()}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();touch();prev()}
+    else if(e.key==='Home'){touch();show(0)}
+    else if(e.key==='End'){touch();show(slides.length-1)}
+  });
+  var tx=null;
+  document.addEventListener('touchstart',function(e){tx=e.changedTouches[0].clientX},{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(tx===null)return;
+    var dx=e.changedTouches[0].clientX-tx;tx=null;
+    if(Math.abs(dx)>40){touch();dx<0?next():prev()}
+  },{passive:true});
+  var start=0;
+  try{var saved=parseInt(localStorage.getItem('deck-slide')||'0',10);if(saved>=0&&saved<slides.length)start=saved}catch(e){}
+  show(start);
+})();
+</script>
