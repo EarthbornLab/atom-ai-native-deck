@@ -576,17 +576,6 @@
   </div>
 </section>
 
-<!-- hiring · 展望：新组织形态 -->
-<section class="slide" data-eyebrow="第三幕 · 展望：新组织形态">
-  <p class="kicker">员工 AI Native 化改造如何和公司技术结合</p>
-  <p class="thesis" style="font-size:clamp(26px,3.8vw,48px)">「AI Native 时代，招人只看两样：<br><span class="accent">判断力能不能被蒸馏</span>，<br><span class="accent">意图能不能写成契约</span>。」</p>
-  <div class="taste" style="margin-top:36px;max-width:920px">
-    <div class="rule">面试题</div>
-    <blockquote style="font-size:clamp(17px,1.9vw,24px)">把你在上一份工作里最重要的一次判断，<br>写成一条 agent 能执行的规则。</blockquote>
-    <p style="color:var(--ink-dim);font-size:15px;margin-top:14px">写得出来的人，才是 AI Native 组织要的人。</p>
-  </div>
-</section>
-
 <!-- HB · 人变为组织资产 -->
 <section class="slide" data-eyebrow="第三幕 · AI 工作流">
   <h2>组织内的人，如何变为<span class="accent">组织的资产</span></h2>
@@ -702,35 +691,11 @@
   </div>
 </section>
 
-<!-- CH1 · 公司即 Harness：四层结构 -->
-<section class="slide" data-eyebrow="终章 · Company as Harness">
-  <p class="kicker">把前面所有实践合成一张图</p>
-  <h2>公司即 Harness：跑在 agent 之上的操作系统</h2>
-  <p class="sub" style="margin-bottom:22px">AI Native 公司不是「用 AI 工具的组织」——它本身就是一个 harness：<b style="color:var(--ink);font-weight:500">每个环节都运行在与 agent 共享 context 的结构里</b>。像操作系统一样，它分四层：</p>
-  <div class="chain" style="max-width:1080px">
-    <div class="layer">
-      <div class="name">L4 权限层<small>守门</small></div>
-      <div class="role">授权是一种数据类型，<b>写入者永远是人</b>：签字、冻结授权范围、遇歧义 fail closed——把「公章」做进 schema。</div>
-    </div>
-    <div class="layer">
-      <div class="name">L3 进程层<small>组织</small></div>
-      <div class="role">agent 角色的树状编排：<b>能力 → worker → 部门</b>。经营目标进来变成 goal 树，<b>组织图就是编排图</b>。</div>
-    </div>
-    <div class="layer">
-      <div class="name">L2 调度层<small>心跳</small></div>
-      <div class="role">cycle / heartbeat / wakeup——agent <b>主动巡检、主动发现、主动推进、主动上报</b>，不等人发起。</div>
-    </div>
-    <div class="layer">
-      <div class="name">L1 存储层<small>数据底座</small></div>
-      <div class="role">决策语料 + 能力资产 + 事实真相源，<b>人和 agent 读同一份</b>——共享 context 是结构性的，不是复制粘贴出来的。</div>
-    </div>
-  </div>
-  <p class="footnote">前面讲的一切在图里各就其位：能力沉淀在 L1，双 loop 在 L2，graph engineering 在 L3，taste 签字在 L4</p>
-</section>
-
 <!-- CH2 · pull → push 反转 -->
 <section class="slide" data-eyebrow="终章 · Company as Harness">
-  <h2>调度层的本质：从 <span style="color:var(--red)">pull</span> 到 <span class="accent">push</span></h2>
+  <p class="kicker">回到开场的问题：Agent 怎么走进组织？</p>
+  <h2>走进组织的判据：从 <span style="color:var(--red)">pull</span> 到 <span class="accent">push</span></h2>
+  <p class="sub" style="margin-bottom:18px">只会响应的 Agent 是工具，<b style="color:var(--ink);font-weight:500">有心跳的 Agent 才是员工</b>——pull 到 push 的反转，就是「走进」的那一步。刚才落地成果里的主动发现、持续接管，全是它的实例。</p>
   <div class="loopwrap">
     <svg viewBox="0 0 820 240" role="img" aria-label="pull 模式人发起 AI 响应人走即停，push 模式 agent 有心跳主动推进人被唤醒">
       <defs>
@@ -768,8 +733,35 @@
   <p class="footnote">agent 的主动性每上一个台阶，人的守门就必须结构化一分——心跳（L2）和公章（L4）是一对，缺一个就是事故</p>
 </section>
 
+<!-- CH1 · 公司即 Harness：四层结构 -->
+<section class="slide" data-eyebrow="终章 · Company as Harness">
+  <p class="kicker">机制：push 怎么成立而不失控</p>
+  <h2>公司即 Harness：跑在 agent 之上的操作系统</h2>
+  <p class="sub" style="margin-bottom:22px">AI Native 公司不是「用 AI 工具的组织」——它本身就是一个 harness：<b style="color:var(--ink);font-weight:500">每个环节都运行在与 agent 共享 context 的结构里</b>。像操作系统一样，它分四层：</p>
+  <div class="chain" style="max-width:1080px">
+    <div class="layer">
+      <div class="name">L4 权限层<small>守门</small></div>
+      <div class="role">授权是一种数据类型，<b>写入者永远是人</b>：签字、冻结授权范围、遇歧义 fail closed——把「公章」做进 schema。</div>
+    </div>
+    <div class="layer">
+      <div class="name">L3 进程层<small>组织</small></div>
+      <div class="role">agent 角色的树状编排：<b>能力 → worker → 部门</b>。经营目标进来变成 goal 树，<b>组织图就是编排图</b>。</div>
+    </div>
+    <div class="layer">
+      <div class="name">L2 调度层<small>心跳</small></div>
+      <div class="role">cycle / heartbeat / wakeup——agent <b>主动巡检、主动发现、主动推进、主动上报</b>，不等人发起。</div>
+    </div>
+    <div class="layer">
+      <div class="name">L1 存储层<small>数据底座</small></div>
+      <div class="role">决策语料 + 能力资产 + 事实真相源，<b>人和 agent 读同一份</b>——共享 context 是结构性的，不是复制粘贴出来的。</div>
+    </div>
+  </div>
+  <p class="footnote">前面讲的一切在图里各就其位：能力沉淀在 L1，双 loop 在 L2，graph engineering 在 L3，taste 签字在 L4</p>
+</section>
+
 <!-- CH3 · 产出函数 -->
 <section class="slide" data-eyebrow="终章 · Company as Harness">
+  <p class="kicker">回报：走进组织之后</p>
   <h2>组织级生产力：公司的产出函数变了</h2>
   <div style="max-width:1000px;margin-top:8px">
     <div style="font-family:var(--mono);font-size:clamp(18px,2.2vw,30px);color:var(--ink-faint);padding:18px 0;border-top:1px dashed var(--line)">
@@ -782,6 +774,17 @@
   </div>
   <p class="sub" style="margin-top:26px">产出第一次和在场人数解耦：<b style="color:var(--ink);font-weight:500">公司可以 24 小时运转，且运转的不只是机器，是组织本身</b>——晚上推进的是白天定下的 goal 树，早上人回来处理的只有机器吵不出结果的分歧。</p>
   <p class="footnote">给投资人的度量提示：评估 AI Native 公司的产能，人头数正在失去解释力——看 goal 吞吐量与判断带宽的利用率</p>
+</section>
+
+<!-- CH4 · Ask：招人标准 -->
+<section class="slide" data-eyebrow="终章 · Company as Harness">
+  <p class="kicker">Ask：回去就能用的一件事</p>
+  <p class="thesis" style="font-size:clamp(26px,3.8vw,48px)">「AI Native 时代，招人只看两样：<br><span class="accent">判断力能不能被蒸馏</span>，<br><span class="accent">意图能不能写成契约</span>。」</p>
+  <div class="taste" style="margin-top:36px;max-width:920px">
+    <div class="rule">面试题</div>
+    <blockquote style="font-size:clamp(17px,1.9vw,24px)">把你在上一份工作里最重要的一次判断，<br>写成一条 agent 能执行的规则。</blockquote>
+    <p style="color:var(--ink-dim);font-size:15px;margin-top:14px">写得出来的人，才是 AI Native 组织要的人。</p>
+  </div>
 </section>
 
 <!-- thanks -->
