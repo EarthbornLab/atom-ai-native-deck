@@ -276,6 +276,46 @@
   <p class="sub">我们的答案：不止<b style="color:var(--ink);font-weight:500">动作的持久化</b>，还有<b style="color:var(--ink);font-weight:500">动作组合的持久化</b>，以及组成的 <b style="color:var(--ink);font-weight:500">worker 和部门的持久化</b>。</p>
 </section>
 
+<!-- V4b · 接入 DSH：底座与生态 -->
+<section class="slide" data-eyebrow="第二幕 · Soloco 组织落地">
+  <h2>Soloco 已经接入 DSH，<span class="accent">但是做的不同</span></h2>
+  <div class="loopwrap">
+    <svg viewBox="0 0 780 270" role="img" aria-label="Soloco 站在 DSH runtime 底座之上，直接复用其插件生态">
+      <defs>
+        <marker id="ah-dsh" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0 L8 4 L0 8 z" fill="#79b877"/>
+        </marker>
+      </defs>
+      <!-- center: Soloco -->
+      <rect x="270" y="52" width="240" height="80" rx="6" fill="#1e1a12" stroke="#e8a33d" stroke-width="1.4"/>
+      <text x="390" y="86" text-anchor="middle" fill="#e8a33d" font-family="JetBrains Mono,monospace" font-size="14" font-weight="600">Soloco</text>
+      <text x="390" y="108" text-anchor="middle" fill="#9c9078" font-family="Noto Sans SC,sans-serif" font-size="12">组织与持久化层</text>
+      <!-- bottom: DSH runtime base -->
+      <rect x="150" y="196" width="480" height="56" rx="6" fill="#1e1a12" stroke="#3a3325" stroke-width="1.4"/>
+      <text x="390" y="220" text-anchor="middle" fill="#ece2cf" font-family="JetBrains Mono,monospace" font-size="14" font-weight="600">DSH</text>
+      <text x="390" y="240" text-anchor="middle" fill="#9c9078" font-family="Noto Sans SC,sans-serif" font-size="12">万物皆插件的生态</text>
+      <!-- bottom arrow: runtime base -->
+      <path d="M 390 194 L 390 138" fill="none" stroke="#79b877" stroke-width="1.8" marker-end="url(#ah-dsh)"/>
+      <text x="402" y="170" text-anchor="start" fill="#79b877" font-family="Noto Sans SC,sans-serif" font-size="12">runtime 执行底座</text>
+      <!-- left plugins → side arrow -->
+      <circle cx="112" cy="76" r="5" fill="none" stroke="#6b6250" stroke-width="1.3"/>
+      <circle cx="134" cy="76" r="5" fill="none" stroke="#6b6250" stroke-width="1.3"/>
+      <circle cx="156" cy="76" r="5" fill="none" stroke="#6b6250" stroke-width="1.3"/>
+      <text x="134" y="58" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">DSH 插件</text>
+      <path d="M 170 84 C 210 90, 230 90, 264 90" fill="none" stroke="#79b877" stroke-width="1.6" marker-end="url(#ah-dsh)"/>
+      <text x="214" y="114" text-anchor="middle" fill="#79b877" font-family="Noto Sans SC,sans-serif" font-size="11">作为插件扩展能力</text>
+      <!-- right plugins → side arrow -->
+      <circle cx="624" cy="76" r="5" fill="none" stroke="#6b6250" stroke-width="1.3"/>
+      <circle cx="646" cy="76" r="5" fill="none" stroke="#6b6250" stroke-width="1.3"/>
+      <circle cx="668" cy="76" r="5" fill="none" stroke="#6b6250" stroke-width="1.3"/>
+      <text x="646" y="58" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">DSH 插件</text>
+      <path d="M 610 84 C 570 90, 550 90, 516 90" fill="none" stroke="#79b877" stroke-width="1.6" marker-end="url(#ah-dsh)"/>
+      <text x="566" y="114" text-anchor="middle" fill="#79b877" font-family="Noto Sans SC,sans-serif" font-size="11">作为插件扩展能力</text>
+    </svg>
+  </div>
+  <p class="sub">Soloco 已经接入 DSH 作为 <b style="color:var(--ink);font-weight:500">runtime 执行底座</b>，同时接入它的<b style="color:var(--ink);font-weight:500">插件生态</b>——生态里每多一个插件，我们的组织就多一种能力。</p>
+</section>
+
 <!-- V4 · 共享智力 -->
 <section class="slide" data-eyebrow="第二幕 · Soloco 组织落地">
   <h2>沉淀之后：共享智力</h2>
@@ -313,6 +353,44 @@
     <span style="font-family:var(--mono);font-size:13px;border:1px solid var(--line);border-radius:4px;padding:6px 14px;color:var(--amber)">可组织拼接分享</span>
   </div>
   <p class="footnote">这就是我们和 DSH 不一样的地方——共享智力，在 toB 场景有非常大的作用</p>
+</section>
+
+<!-- V4c · 动作到部门的组装链 -->
+<section class="slide" data-eyebrow="第二幕 · Soloco 组织落地">
+  <h2>从动作到部门：一条组装链</h2>
+  <div class="loopwrap">
+    <svg viewBox="0 0 780 190" role="img" aria-label="动作经版本迭代与沉淀变为能力，能力组合成员工，员工组合成部门">
+      <defs>
+        <marker id="ah-chain" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0 L8 4 L0 8 z" fill="#e8a33d"/>
+        </marker>
+      </defs>
+      <!-- 动作 -->
+      <rect x="20" y="60" width="140" height="64" rx="6" fill="#1e1a12" stroke="#3a3325" stroke-width="1.4"/>
+      <text x="90" y="87" text-anchor="middle" fill="#ece2cf" font-family="Noto Sans SC,sans-serif" font-size="14">动作</text>
+      <text x="90" y="108" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">版本迭代 + 沉淀</text>
+      <!-- 能力 -->
+      <rect x="220" y="60" width="140" height="64" rx="6" fill="#1e1a12" stroke="#3a3325" stroke-width="1.4"/>
+      <text x="290" y="87" text-anchor="middle" fill="#c78f3d" font-family="Noto Sans SC,sans-serif" font-size="14">能力</text>
+      <text x="290" y="108" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">一系列动作</text>
+      <!-- 员工 -->
+      <rect x="420" y="60" width="140" height="64" rx="6" fill="#1e1a12" stroke="#3a3325" stroke-width="1.4"/>
+      <text x="490" y="87" text-anchor="middle" fill="#ece2cf" font-family="Noto Sans SC,sans-serif" font-size="14">员工</text>
+      <text x="490" y="108" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">能力的排列组合</text>
+      <!-- 部门 -->
+      <rect x="620" y="60" width="140" height="64" rx="6" fill="#1e1a12" stroke="#e8a33d" stroke-width="1.4"/>
+      <text x="690" y="87" text-anchor="middle" fill="#e8a33d" font-family="Noto Sans SC,sans-serif" font-size="14">部门</text>
+      <text x="690" y="108" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">员工的排列组合</text>
+      <!-- arrows -->
+      <path d="M 162 92 L 214 92" fill="none" stroke="#e8a33d" stroke-width="1.6" marker-end="url(#ah-chain)"/>
+      <path d="M 362 92 L 414 92" fill="none" stroke="#e8a33d" stroke-width="1.6" marker-end="url(#ah-chain)"/>
+      <path d="M 562 92 L 614 92" fill="none" stroke="#e8a33d" stroke-width="1.6" marker-end="url(#ah-chain)"/>
+      <text x="188" y="78" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">沉淀</text>
+      <text x="388" y="78" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">组合</text>
+      <text x="588" y="78" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">组合</text>
+    </svg>
+  </div>
+  <p class="sub">通过<b style="color:var(--ink);font-weight:500">动作的版本迭代 + 沉淀</b>，一系列动作变为一种<b style="color:var(--ink);font-weight:500">能力</b>；再通过能力的排列组合形成<b style="color:var(--ink);font-weight:500">员工</b>，通过员工的排列组合形成<b style="color:var(--ink);font-weight:500">部门</b>。</p>
 </section>
 
 <!-- V5 · graph engineering + 组织沉淀 -->
@@ -367,7 +445,7 @@
       </g>
     </svg>
   </div>
-  <p class="sub">同一个组装动作逐层复利：<b style="color:var(--ink);font-weight:500">动作组装成能力，能力构成员工，员工组成部门，部门结合成组织</b>——每一层都可沉淀，沉淀了就能分享、能进化。这就是从个人能力到组织的 graph engineering。</p>
+  <p class="sub">同一个组装动作逐层复利——每一层都可沉淀，沉淀了就能分享、能进化。这就是从个人能力到组织的 graph engineering。</p>
   <p class="footnote">动作是节点，组装是边——loop engineering 管一个循环怎么转，graph engineering 管能力怎么长成组织，这是硅谷当下在争的下一层抽象</p>
 </section>
 
@@ -384,6 +462,7 @@
 
 <!-- R1 · 战略资源成果 -->
 <section class="slide scenes" data-eyebrow="第二幕 · 落地成果">
+  <p class="kicker" style="color:var(--amber)">Soloco 是主动发现、主动式智能的产品</p>
   <h2>落地成果：战略资源发现</h2>
   <p class="sub" style="margin-bottom:22px">持续通过 AI native 组织找寻资源——Soloco 负责发现、触达、发邮件：</p>
   <div class="drift" style="max-width:960px">
@@ -391,31 +470,56 @@
     <div class="row"><span class="no">→</span><span class="tx"><b>胡润 AI 先锋（第一届）</b>——零成本入选</span></div>
     <div class="row"><span class="no">→</span><span class="tx"><b>多个免费 PR 机会</b>——持续抓取、邮件触达</span></div>
   </div>
-  <div style="margin-top:26px;border:1px dashed var(--line);border-radius:12px;padding:22px;max-width:960px;text-align:center;color:var(--ink-faint);font-family:var(--mono);font-size:13px">［ 图位：申请通过邮件 / 入选页面截图 ］</div>
+  <p class="sub" style="margin-top:26px">不是你问它才答——它一直在看、主动把机会推到你面前。</p>
 </section>
 
 <!-- R2 · 数据底座与零信任 -->
 <section class="slide scenes" data-eyebrow="第二幕 · 落地成果">
-  <h2>落地成果：数据底座与零信任</h2>
-  <div class="cols" style="grid-template-columns:1fr 1fr;gap:20px;max-width:1100px">
+  <h2>落地成果：数据底座</h2>
+  <div class="cols" style="grid-template-columns:1fr;gap:20px;max-width:760px">
     <div class="pane"><div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>持续构建公司数据底座</div>
       <div class="pane-body"><b>所有数据持续汇入、持续喂给组织建设。</b>录音沉淀的文本、飞书文档、日历、task list、GitHub 代码库——公司发生过的一切，都是底座的一部分。</div></div>
-    <div class="pane"><div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>零信任权限体系</div>
-      <div class="pane-body"><b>底座之上，谁能看什么由身份决定。</b>每个身份只开它需要的数据权限；新员工入职自动配置飞书、runtime 第一时间拿到公司上下文；runtime 替 leader 做推测型任务分发。</div></div>
   </div>
-  <p class="footnote">一个实习生进来，权限自动开到刚好够用——数据底座是共享的，访问是零信任的</p>
 </section>
 
 <!-- R3 · 主动式智能收尾 -->
 <section class="slide scenes" data-eyebrow="第二幕 · 落地成果">
-  <h2>Soloco 是<span class="accent">主动发现、主动式智能</span>的产品</h2>
-  <p class="sub" style="margin-bottom:22px">不是你问它才答——它一直在看、一直在沉淀、主动把该做的事推到你面前：</p>
+  <h2>落地成果：<span class="accent">持续接管</span></h2>
+  <p class="sub" style="margin-bottom:22px">它一直在看、一直在沉淀、主动把该做的事推到你面前：</p>
   <div class="cols" style="grid-template-columns:1fr 1fr;gap:20px;max-width:1100px">
     <div class="pane"><div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>会议与背调接管</div>
       <div class="pane-body"><b>每次会议 / 面试都留底稿。</b>公司内部一直开着录音，持续录音转文字；纪要喂给 Soloco，做人物背调、机构背调、会后推进研究——持续接管，而不是开完就散。</div></div>
     <div class="pane"><div class="pane-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span>执行端打通</div>
-      <div class="pane-body"><b>筛简历、LinkedIn 触达，走 MCP 落到执行端。</b>未来把 SaaS 转成可执行 CLI，执行边界随之打开。</div></div>
+      <div class="pane-body"><b>筛简历、LinkedIn 触达，走 MCP 落到执行端。</b>SaaS 转成可执行 CLI，执行边界随之打开。</div></div>
   </div>
+</section>
+
+<!-- BR3 · 第三幕衔接 -->
+<section class="slide" data-eyebrow="第三幕 · AI 工作流">
+  <h2>视角切换：从产品，到<span class="accent">公司自己</span></h2>
+  <div class="loopwrap">
+    <svg viewBox="0 0 780 220" role="img" aria-label="前两幕讲 SoloEngine 与 Soloco，第三幕讲公司工程的 AI Native 化">
+      <defs>
+        <marker id="ah-br3" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0 L8 4 L0 8 z" fill="#e8a33d"/>
+        </marker>
+      </defs>
+      <!-- left: 前两幕 -->
+      <rect x="30" y="40" width="310" height="140" rx="6" fill="#1e1a12" stroke="#3a3325" stroke-width="1.4"/>
+      <text x="185" y="72" text-anchor="middle" fill="#9c9078" font-family="Noto Sans SC,sans-serif" font-size="12">刚才讲的</text>
+      <text x="185" y="102" text-anchor="middle" fill="#ece2cf" font-family="Noto Sans SC,sans-serif" font-size="14">SoloEngine 运行原理</text>
+      <text x="185" y="128" text-anchor="middle" fill="#ece2cf" font-family="Noto Sans SC,sans-serif" font-size="14">Soloco 长期使命</text>
+      <text x="185" y="154" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="12">take over 数据 · 持续决策</text>
+      <!-- arrow -->
+      <path d="M 348 110 L 424 110" fill="none" stroke="#e8a33d" stroke-width="1.8" marker-end="url(#ah-br3)"/>
+      <!-- right: 第三幕 -->
+      <rect x="440" y="40" width="310" height="140" rx="6" fill="#1e1a12" stroke="#e8a33d" stroke-width="1.4"/>
+      <text x="595" y="72" text-anchor="middle" fill="#e8a33d" font-family="Noto Sans SC,sans-serif" font-size="12">接下来讲的</text>
+      <text x="595" y="106" text-anchor="middle" fill="#ece2cf" font-family="Noto Sans SC,sans-serif" font-size="14">公司工程如何 AI Native 化</text>
+      <text x="595" y="134" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="12">我们自己每天怎么干活</text>
+    </svg>
+  </div>
+  <p class="sub">前面讲的是 <b style="color:var(--ink);font-weight:500">SoloEngine 的运行原理</b>，以及 Soloco 内部作为长期级别使命如何 <b style="color:var(--ink);font-weight:500">take over 数据、持续决策</b>。现在换个视角——<b style="color:var(--ink);font-weight:500">公司工程上如何进行 AI Native 化</b>。</p>
 </section>
 
 <!-- IND · 业界现状锚点 -->
@@ -426,14 +530,14 @@
     <div class="row"><span class="no">02</span><span class="tx"><b>逐 session 交代上下文</b>——每开一个会话，从头讲一遍背景</span></div>
     <div class="row"><span class="no">03</span><span class="tx"><b>chat 式一问一答</b>——人不在，一切停</span></div>
   </div>
-  <p class="sub" style="margin-top:26px">这三个瓶颈，我们全部<b style="color:var(--ink);font-weight:500">结构化</b>掉了——接下来是我们的三件套。</p>
+  <p class="sub" style="margin-top:26px">这三个瓶颈，我们全部<b style="color:var(--ink);font-weight:500">结构化</b>掉了——<b style="color:var(--ink);font-weight:500">Soloco 做长程级别任务，团队通过 AI harness 工具进行工作流</b>。接下来是我们的三件套。</p>
 </section>
 
 <!-- pivot · thesis -->
 <section class="slide" data-eyebrow="第三幕 · AI 工作流">
   <p class="kicker">这套愿景怎么落地？我们公司的答案</p>
   <h1>人对<span class="accent">文档</span>负责，<br>AI 对<span class="accent">代码</span>负责。</h1>
-  <p class="sub" style="margin-top:28px">文档是人和 agent 沟通的桥梁——人的判断沉淀成文档，AI 的执行落成代码。接下来讲怎么做：文档分层、taste 蒸馏、带宽与认知投降。</p>
+  <p class="sub" style="margin-top:28px">文档是人和 agent 沟通的桥梁——人的判断沉淀成文档，AI 的执行落成代码。接下来讲怎么做：文档分层、taste 蒸馏、踩过的坑、带宽与认知投降。</p>
 </section>
 
 <!-- 2 · five layers (stepped) -->
@@ -472,6 +576,54 @@
   </div>
 </section>
 
+<!-- hiring · 展望：新组织形态 -->
+<section class="slide" data-eyebrow="第三幕 · 展望：新组织形态">
+  <p class="kicker">员工 AI Native 化改造如何和公司技术结合</p>
+  <p class="thesis" style="font-size:clamp(26px,3.8vw,48px)">「AI Native 时代，招人只看两样：<br><span class="accent">判断力能不能被蒸馏</span>，<br><span class="accent">意图能不能写成契约</span>。」</p>
+  <div class="taste" style="margin-top:36px;max-width:920px">
+    <div class="rule">面试题</div>
+    <blockquote style="font-size:clamp(17px,1.9vw,24px)">把你在上一份工作里最重要的一次判断，<br>写成一条 agent 能执行的规则。</blockquote>
+    <p style="color:var(--ink-dim);font-size:15px;margin-top:14px">写得出来的人，才是 AI Native 组织要的人。</p>
+  </div>
+</section>
+
+<!-- HB · 人变为组织资产 -->
+<section class="slide" data-eyebrow="第三幕 · AI 工作流">
+  <h2>组织内的人，如何变为<span class="accent">组织的资产</span></h2>
+  <div class="loopwrap">
+    <svg viewBox="0 0 780 210" role="img" aria-label="人的能力与认知被提取为资产，放大为千千万万的能力 agent">
+      <defs>
+        <marker id="ah-hb" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0 L8 4 L0 8 z" fill="#e8a33d"/>
+        </marker>
+      </defs>
+      <!-- person -->
+      <circle cx="110" cy="100" r="46" fill="none" stroke="#3a3325" stroke-width="1.4"/>
+      <text x="110" y="96" text-anchor="middle" fill="#ece2cf" font-family="Noto Sans SC,sans-serif" font-size="13">人</text>
+      <text x="110" y="116" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">能力 · 认知</text>
+      <!-- extract arrow -->
+      <path d="M 162 100 L 260 100" fill="none" stroke="#e8a33d" stroke-width="1.6" marker-end="url(#ah-hb)"/>
+      <text x="211" y="86" text-anchor="middle" fill="#9c9078" font-family="Noto Sans SC,sans-serif" font-size="12">提取</text>
+      <!-- asset -->
+      <rect x="266" y="66" width="170" height="68" rx="6" fill="#1e1a12" stroke="#e8a33d" stroke-width="1.4"/>
+      <text x="351" y="94" text-anchor="middle" fill="#e8a33d" font-family="Noto Sans SC,sans-serif" font-size="14">资产</text>
+      <text x="351" y="116" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">可复用 · 可版本管理</text>
+      <!-- amplify arrows to agents -->
+      <path d="M 440 82 C 500 58, 540 50, 586 46" fill="none" stroke="#79b877" stroke-width="1.5" marker-end="url(#ah-hb)"/>
+      <path d="M 442 100 L 586 100" fill="none" stroke="#79b877" stroke-width="1.5" marker-end="url(#ah-hb)"/>
+      <path d="M 440 118 C 500 142, 540 150, 586 154" fill="none" stroke="#79b877" stroke-width="1.5" marker-end="url(#ah-hb)"/>
+      <text x="512" y="86" text-anchor="middle" fill="#79b877" font-family="Noto Sans SC,sans-serif" font-size="12">放大</text>
+      <!-- agents -->
+      <g font-family="JetBrains Mono,monospace" font-size="11" fill="#9c9078">
+        <rect x="594" y="30" width="150" height="28" rx="4" fill="#1e1a12" stroke="#3a3325"/><text x="669" y="48" text-anchor="middle">agent × 1</text>
+        <rect x="594" y="86" width="150" height="28" rx="4" fill="#1e1a12" stroke="#3a3325"/><text x="669" y="104" text-anchor="middle">agent × 100</text>
+        <rect x="594" y="142" width="150" height="28" rx="4" fill="#1e1a12" stroke="#3a3325"/><text x="669" y="160" text-anchor="middle">agent × 10000</text>
+      </g>
+    </svg>
+  </div>
+  <p class="sub">AI Native 化的进程里，<b style="color:var(--ink);font-weight:500">人还是限制效率的瓶颈</b>。只有把人的能力和认知<b style="color:var(--ink);font-weight:500">提取出来，变成资产</b>，人才不再是瓶颈，而是<b style="color:var(--amber);font-weight:500">放大器</b>——放大成千千万万的能力 agent。</p>
+</section>
+
 <!-- 5 · distill pipeline -->
 <section class="slide" data-eyebrow="第三幕 · AI 工作流">
   <h2>把我的 review taste 蒸馏出来</h2>
@@ -487,27 +639,12 @@
 
 <!-- 6 · taste verbatim -->
 <section class="slide" data-eyebrow="第三幕 · AI 工作流">
-  <h2>机器意见的背后，挂着人的原话</h2>
+  <h2>蒸馏出来的 taste</h2>
   <div class="taste" style="max-width:1000px">
     <div class="rule">root-cause-over-symptom<span class="sev">[hard · must-fix]</span><span style="color:var(--ink-faint);margin-left:10px">总纲：fix PR 第一问，治标还是治本</span></div>
     <blockquote>「治标不可耻，把治标伪装成治本才拦截。」</blockquote>
-    <div class="prov">我的原话 · provenance: (claude-code, session, 2026-07-03) · owner-endorsed</div>
+    <div class="prov">taste 文件原文，从我的会话蒸馏 · provenance: (claude-code, session, 2026-07-03) · owner-endorsed</div>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1000px;margin-top:16px" class="taste-subs">
-    <div style="border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:16px 18px">
-      <div style="font-family:var(--mono);font-size:13px;color:var(--amber-soft);margin-bottom:8px">no-silent-fallback</div>
-      <div style="font-size:14px;color:var(--ink-dim)">别加 fallback 掩盖——先问该不该兜底、有没有更干净的根治法</div>
-    </div>
-    <div style="border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:16px 18px">
-      <div style="font-family:var(--mono);font-size:13px;color:var(--amber-soft);margin-bottom:8px">general-invariant-<br>over-special-case</div>
-      <div style="font-size:14px;color:var(--ink-dim)">别逐个 case 打地鼠——「永远修不完」，退一步找根因</div>
-    </div>
-    <div style="border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:16px 18px">
-      <div style="font-family:var(--mono);font-size:13px;color:var(--amber-soft);margin-bottom:8px">challenge-stated-intent</div>
-      <div style="font-size:14px;color:var(--ink-dim)">评审重构追问真实意图是否达成——别被表面解耦骗了</div>
-    </div>
-  </div>
-  <p class="footnote">评审 fix 先过总纲这一关，再落到具体那条 · 三条实例先存在，2026-07-03 收敛成一条总纲——taste 也要重构，重复就收敛<br>语料里没有的不许编——不设这条防线，蒸出来的是模型对「资深工程师」的刻板印象，不是你</p>
 </section>
 
 <!-- 8 · dual loop -->
@@ -570,29 +707,6 @@
   <div class="big">80%</div>
   <p class="sub" style="font-size:clamp(18px,2.2vw,26px);color:var(--ink);margin-top:24px;max-width:26em">但带宽拉满有代价——AI 答错的时候，仍有 80% 的人照单全收。</p>
   <p class="footnote">认知投降 cognitive surrender · Shaw &amp; Nave（宾大沃顿）《Thinking—Fast, Slow, and Artificial》2026.1 · n=1372<br>它不是认知卸载——卸载时控制权还在你手里，投降是连验证都放弃了</p>
-</section>
-
-<!-- 14 · answer -->
-<section class="slide" data-eyebrow="第三幕 · AI 工作流">
-  <h2>带宽是赚到的，<br>判断不能一起交出去</h2>
-  <p class="sub" style="margin-bottom:26px">10 个 session 都在产出看起来很专业的结论，核对带宽早就不够，最省力的动作就是全点「同意」。而且自进化让 AI 的能力越滚越大，人的判断力守门就越重要。我们的答法：<b style="color:var(--ink);font-weight:500">该投降的地方彻底投降，不该投降的地方结构性地防止投降。</b></p>
-  <div class="drift" style="max-width:1000px">
-    <div class="row"><span class="no">→</span><span class="tx"><b>taste 回放 0 误报才签字</b>——签字这个动作本身就是拒绝投降，它逼我真的去核对</span></div>
-    <div class="row"><span class="no">→</span><span class="tx"><b>REQUEST_CHANGES 挡合并</b>——机器结论要生效必须过正式 review，不是随手点赞</span></div>
-    <div class="row"><span class="no">→</span><span class="tx"><b>无人值守长跑用 digest 冻结授权范围</b>——agent 半夜写的任何文本都不构成授权</span></div>
-    <div class="row"><span class="no">→</span><span class="tx"><b>遇到歧义 fail closed</b>——宪法第一条，把「问人」变成默认动作而不是例外</span></div>
-  </div>
-</section>
-
-<!-- hiring · 展望：新组织形态 -->
-<section class="slide" data-eyebrow="第三幕 · 展望：新组织形态">
-  <p class="kicker">我们讲了 AI 的组织扩张——真实世界的公司组织该怎么扩张？</p>
-  <p class="thesis" style="font-size:clamp(26px,3.8vw,48px)">「AI Native 时代，招人只看两样：<br><span class="accent">判断力能不能被蒸馏</span>，<br><span class="accent">意图能不能写成契约</span>。」</p>
-  <div class="taste" style="margin-top:36px;max-width:920px">
-    <div class="rule">面试题</div>
-    <blockquote style="font-size:clamp(17px,1.9vw,24px)">把你在上一份工作里最重要的一次判断，<br>写成一条 agent 能执行的规则。</blockquote>
-    <p style="color:var(--ink-dim);font-size:15px;margin-top:14px">写得出来的人，才是 AI Native 组织要的人。</p>
-  </div>
 </section>
 
 <!-- 14 · close -->
