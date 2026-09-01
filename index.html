@@ -786,6 +786,58 @@
   </div>
 </section>
 
+<!-- COG1 · 80% -->
+<section class="slide" data-eyebrow="终章 · Company as Harness">
+  <div class="big">80%</div>
+  <p class="sub" style="font-size:clamp(18px,2.2vw,26px);color:var(--ink);margin-top:24px;max-width:26em">但带宽拉满有代价——AI 答错的时候，仍有 80% 的人照单全收。</p>
+  <p class="footnote">认知投降 cognitive surrender · Shaw &amp; Nave（宾大沃顿）《Thinking—Fast, Slow, and Artificial》2026.1 · n=1372<br>它不是认知卸载——卸载时控制权还在你手里，投降是连验证都放弃了</p>
+</section>
+
+<!-- COG2 · 判断不能交出去 -->
+<section class="slide" data-eyebrow="终章 · Company as Harness">
+  <h2>带宽是赚到的，<br>判断不能一起交出去</h2>
+  <p class="sub" style="margin-bottom:26px">多个 session 同时产出看起来很专业的结论，核对带宽早就不够，最省力的动作就是全点「同意」。而且自进化让 AI 的能力越滚越大，人的判断力守门就越重要。我们的答法：<b style="color:var(--ink);font-weight:500">该投降的地方彻底投降，不该投降的地方结构性地防止投降。</b></p>
+  <div class="drift" style="max-width:1000px">
+    <div class="row"><span class="no">→</span><span class="tx"><b>taste 回放 0 误报才签字</b>——签字这个动作本身就是拒绝投降，它逼我真的去核对</span></div>
+    <div class="row"><span class="no">→</span><span class="tx"><b>REQUEST_CHANGES 挡合并</b>——机器结论要生效必须过正式 review，不是随手点赞</span></div>
+    <div class="row"><span class="no">→</span><span class="tx"><b>无人值守长跑用契约冻结授权范围</b>——agent 半夜写的任何文本都不构成授权</span></div>
+    <div class="row"><span class="no">→</span><span class="tx"><b>遇到歧义 fail closed</b>——宪法第一条，把「问人」变成默认动作而不是例外</span></div>
+  </div>
+</section>
+
+<!-- GOAL · 使命：拆分 · 冻结 · 执行 -->
+<section class="slide" data-eyebrow="终章 · Company as Harness">
+  <h2>使命怎么无人值守跑：<span class="accent">拆分 · 冻结 · 执行</span></h2>
+  <div class="loopwrap">
+    <svg viewBox="0 0 820 212" role="img" aria-label="规划 skill 冻结契约生成 hash，执行 skill 每次动作前重算 hash 校验">
+      <defs>
+        <marker id="ah-goal" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0 L8 4 L0 8 z" fill="#e8a33d"/>
+        </marker>
+      </defs>
+      <rect x="20" y="56" width="220" height="86" rx="6" fill="#1e1a12" stroke="#3a3325" stroke-width="1.4"/>
+      <text x="130" y="86" text-anchor="middle" fill="#ece2cf" font-family="Noto Sans SC,sans-serif" font-size="14">规划 skill</text>
+      <text x="130" y="108" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">拆成有序 PR 阶段</text>
+      <text x="130" y="126" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">写成一份交付契约</text>
+      <path d="M 244 99 L 296 99" fill="none" stroke="#e8a33d" stroke-width="1.6" marker-end="url(#ah-goal)"/>
+      <rect x="302" y="46" width="216" height="106" rx="6" fill="#1e1a12" stroke="#e8a33d" stroke-width="1.6"/>
+      <text x="410" y="76" text-anchor="middle" fill="#e8a33d" font-family="Noto Sans SC,sans-serif" font-size="14">冻结的范围快照</text>
+      <text x="410" y="98" text-anchor="middle" fill="#9c9078" font-family="Noto Sans SC,sans-serif" font-size="11">目标 · 不变量 · 阶段图 · 授权</text>
+      <rect x="322" y="110" width="176" height="26" rx="4" fill="#262117" stroke="#3a3325"/>
+      <text x="410" y="128" text-anchor="middle" fill="#79b877" font-family="JetBrains Mono,monospace" font-size="12">sha256:a41f…2c7b</text>
+      <path d="M 522 99 L 574 99" fill="none" stroke="#e8a33d" stroke-width="1.6" marker-end="url(#ah-goal)"/>
+      <rect x="580" y="56" width="220" height="86" rx="6" fill="#1e1a12" stroke="#3a3325" stroke-width="1.4"/>
+      <text x="690" y="86" text-anchor="middle" fill="#ece2cf" font-family="Noto Sans SC,sans-serif" font-size="14">执行 skill</text>
+      <text x="690" y="108" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">每次外部动作前</text>
+      <text x="690" y="126" text-anchor="middle" fill="#6b6250" font-family="Noto Sans SC,sans-serif" font-size="11">重算 hash 再动手</text>
+      <path d="M 690 150 C 660 188, 470 192, 412 160" fill="none" stroke="#79b877" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#ah-goal)"/>
+      <text x="548" y="202" text-anchor="middle" fill="#79b877" font-family="Noto Sans SC,sans-serif" font-size="11">对不上就停下来等人——不猜、不放行</text>
+    </svg>
+  </div>
+  <p class="sub">使命被拆成<b style="color:var(--ink);font-weight:500">两个 skill</b>：一个负责<b style="color:var(--ink);font-weight:500">拆 PR 并把契约冻结</b>，另一个负责<b style="color:var(--ink);font-weight:500">执行</b>。冻结的办法是给范围快照算一个 <b style="color:var(--ink);font-weight:500">SHA-256 hash</b>——改一个字节 hash 就变，必须重新拿人的授权。</p>
+  <p class="footnote">授权只认人发出的启动消息 + 那一个 hash · 状态账本可以随时更新，但它不改 hash，也永远不构成授权</p>
+</section>
+
 <!-- thanks -->
 <section class="slide" data-eyebrow="谢谢">
   <p class="thesis">谢谢</p>
